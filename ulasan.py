@@ -1,4 +1,4 @@
-from time import sleep
+import time
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
@@ -24,12 +24,12 @@ span = soup.find('div', {'role':'main'}).find_all('h1', {'class':'DUwDvf fontHea
 location = span[0].text
 print(location)
 
-sleep(2)
+time.sleep(2)
 
 def ulasan():
     review = driver.find_element(By.XPATH, '//*[@id="QA0Szd"]/div/div/div[1]/div[2]/div/div[1]/div/div/div[3]/div/div/button[2]')
     review.click()
-    sleep(4)
+    time.sleep(4)
 
 ulasan()
 
@@ -45,36 +45,40 @@ i = 0
 hasil_ulasan = []
 stars = []
 
+start_time = time.time()
 
-while i < 5 :
+
+while i < x :
+    elapsed_time= time.time()
     pyautogui.moveTo(331, 626)
     pyautogui.scroll(-20000)
-    pyautogui.sleep(1)   
+    pyautogui.time.sleep(1)   
 
-    content = driver.page_source
-    soup = BeautifulSoup(content, 'lxml')
-                                         
-    review_ = soup.findAll('span',{'class':'wiI7pd'})
+    current_time = time.time()
+    elapsed_time = current_time - start_time
 
-    ulasan_teks = review_[i].text
-    hasil_ulasan.append(ulasan_teks)
-
-    bintang = soup.findAll('span', {'class':'kvMYJc'})
-    total = [t_bin['aria-label']for t_bin in bintang]
-    for star in total:
-        num = int(star.split()[0])
-        stars.append(num)
-
+    
     i +=1
-    # print(i)
-    # if i == 1000:
-    #     print('list ulasan = ', hasil_ulasan)
-    #     print('list_bintang = ', stars[:i])
-    # else:
-    #     continue
-# print(hasil_ulasan)
-# print(stars[:i])
-data_frame = pd.DataFrame(list(zip(hasil_ulasan, stars)), columns = ['Ulasan', 'Rating'])
+    if (elapsed_time > 300):
+        content = driver.page_source
+        soup = BeautifulSoup(content, 'lxml')
+
+        review_all = soup.findAll('div', {'class':'MyEned'})
+        teks = ['nothing']  
+        # print('-',review_all)           
+        for element in review_all:
+            hasil_ulasan.append(element.text)
+            teks[0] = element.text                    
+            print (teks)
+        bintang = soup.findAll('span', {'class':'kvMYJc'})
+        total = [t_bin['aria-label']for t_bin in bintang]
+        for star in total:
+            num = int(star.split()[0])
+            stars.append(num)
+
+        break
+
+data_frame = pd.DataFrame(list(zip(hasil_ulasan, stars)), columns = ['Nama Tempat','Ulasan', 'Rating'])
 print(data_frame)
 
 filename = 'set-data-bulbul.csv'
