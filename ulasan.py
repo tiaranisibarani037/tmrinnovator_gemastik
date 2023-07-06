@@ -1,6 +1,3 @@
-import pandas as pd
-import pyautogui
-import csv
 import time
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
@@ -8,9 +5,13 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
+import pandas as pd
+import pyautogui
+import csv
 
 option = webdriver.ChromeOptions()
 option.add_argument("start-maximized")
+
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=option)
 url = 'https://www.google.com/maps/place/Pantai+Lumban+Bul-bul+Balige'
@@ -41,7 +42,6 @@ print(x)
 
 i = 0
 
-nama_tempat = []
 hasil_ulasan = []
 stars = []
 
@@ -59,27 +59,29 @@ while i < x :
 
     
     i +=1
-    if (elapsed_time > 240):
+    if (elapsed_time > 300):
         content = driver.page_source
         soup = BeautifulSoup(content, 'lxml')
 
         review_all = soup.findAll('div', {'class':'MyEned'})
+        teks = ['nothing']  
         # print('-',review_all)           
         for element in review_all:
             hasil_ulasan.append(element.text)
-
+            teks[0] = element.text                    
+            print (teks)
         bintang = soup.findAll('span', {'class':'kvMYJc'})
         total = [t_bin['aria-label']for t_bin in bintang]
         for star in total:
             num = int(star.split()[0])
             stars.append(num)
-            nama_tempat.append(location)
+
         break
 
-data_frame = pd.DataFrame(list(zip(nama_tempat,hasil_ulasan, stars)), columns = ['Nama Tempat','Ulasan', 'Rating'])
+data_frame = pd.DataFrame(list(zip(hasil_ulasan, stars)), columns = ['Nama Tempat','Ulasan', 'Rating'])
 print(data_frame)
 
-filename = 'set-data-ulasan-pantai-bulbul.csv'
+filename = 'set-data-bulbul.csv'
 
 data_frame.to_csv(filename, index=False, encoding='utf-8')
 print('Berhasil membuat file csv')
