@@ -50,7 +50,7 @@ while start.lower() == 'y':
     
     search = input('bandara/pelabuhan/rumah sakit : ')
     area(search)
-    pencarian.append(search)
+    pencarian.append(search.title())
 
     distance = driver.find_element(By.XPATH, '//*[@id="section-directions-trip-0"]/div[1]/div/div[1]/div[2]/div')
     hasil = distance.text
