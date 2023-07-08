@@ -28,12 +28,13 @@ def main():
         list_b += list_amenitas
         list_c += list_nama_amenitas
     
-    df = pd.DataFrame({
+    df_final = pd.DataFrame({
         'nama_objek_wisata': list_a,
         'amenitas': list_b,
         'nama_amenitas': list_c})
 
-    print(df.head())
+    file_name = 'set-info.csv'
+    df_final.to_csv(file_name, index=False)
 
 if __name__ == "__main__":
     main()
